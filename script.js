@@ -1,4 +1,7 @@
-document.getElementById('year').textContent = new Date().getFullYear();
+const yearEl = document.getElementById('year');
+if (yearEl) {
+  yearEl.textContent = new Date().getFullYear();
+}
 
 const navToggle = document.getElementById('navToggle');
 const nav = document.querySelector('.nav');
