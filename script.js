@@ -3,7 +3,7 @@ if (yearEl) {
   yearEl.textContent = new Date().getFullYear();
 }
 
-const VISITS_WORKER_URL = 'https://your-worker.workers.dev';
+const VISITS_WORKER_URL = 'https://portfolio-counter.mysoulrises.workers.dev';
 
 function initVisitTracker() {
   const visitsEl = document.getElementById('visits');
