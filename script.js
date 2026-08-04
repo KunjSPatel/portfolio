@@ -3,92 +3,35 @@ if (yearEl) {
   yearEl.textContent = new Date().getFullYear();
 }
 
-// Visit tracking system
+const VISITS_WORKER_URL = 'https://your-worker.workers.dev';
+
 function initVisitTracker() {
-  const STORAGE_KEYS = {
-    total: 'portfolio_total_visits',
-    user: 'portfolio_user_visits',
-    lastVisit: 'portfolio_last_visit',
-    sessionActive: 'portfolio_session_active'
-  };
+  const visitsEl = document.getElementById('visits');
+  const lastVisitEl = document.getElementById('last-visit');
 
-  // Check if this is a new session (not just a page reload within same session)
-  const isNewSession = !sessionStorage.getItem(STORAGE_KEYS.sessionActive);
-
-  if (isNewSession) {
-    // Mark session as active
-    sessionStorage.setItem(STORAGE_KEYS.sessionActive, 'true');
-
-    // Increment counters
-    const totalVisits = parseInt(localStorage.getItem(STORAGE_KEYS.total) || '0') + 1;
-    const userVisits = parseInt(localStorage.getItem(STORAGE_KEYS.user) || '0') + 1;
-
-    localStorage.setItem(STORAGE_KEYS.total, totalVisits.toString());
-    localStorage.setItem(STORAGE_KEYS.user, userVisits.toString());
-    localStorage.setItem(STORAGE_KEYS.lastVisit, new Date().toISOString());
+  if (!visitsEl || !lastVisitEl) {
+    return;
   }
 
-  // Display current stats
-  const totalVisits = parseInt(localStorage.getItem(STORAGE_KEYS.total) || '0');
-  const userVisits = parseInt(localStorage.getItem(STORAGE_KEYS.user) || '0');
-  const lastVisit = localStorage.getItem(STORAGE_KEYS.lastVisit);
+  fetch(VISITS_WORKER_URL)
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`Visit API failed: ${res.status}`);
+      }
+      return res.json();
+    })
+    .then((data) => {
+      visitsEl.textContent = String(data.visits ?? '--');
 
-  // Format last visit date
-  let lastVisitFormatted = '--';
-  if (lastVisit) {
-    const date = new Date(lastVisit);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) {
-      lastVisitFormatted = 'just now';
-    } else if (diffMins < 60) {
-      lastVisitFormatted = `${diffMins}m ago`;
-    } else if (diffHours < 24) {
-      lastVisitFormatted = `${diffHours}h ago`;
-    } else if (diffDays < 30) {
-      lastVisitFormatted = `${diffDays}d ago`;
-    } else {
-      lastVisitFormatted = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    }
-  }
-
-  // Update UI
-  const totalEl = document.getElementById('totalVisits');
-  const userEl = document.getElementById('userVisits');
-  const lastEl = document.getElementById('lastVisit');
-
-  if (totalEl) totalEl.textContent = totalVisits.toString();
-  if (userEl) userEl.textContent = userVisits.toString();
-  if (lastEl) lastEl.textContent = lastVisitFormatted;
-
-  // Animate counter increment
-  if (isNewSession && totalEl && userEl) {
-    animateCounter(totalEl, totalVisits - 1, totalVisits);
-    animateCounter(userEl, userVisits - 1, userVisits);
-  }
-}
-
-function animateCounter(element, start, end) {
-  const duration = 600;
-  const startTime = performance.now();
-
-  function update(currentTime) {
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const current = Math.floor(start + (end - start) * progress);
-
-    element.textContent = current.toString();
-
-    if (progress < 1) {
-      requestAnimationFrame(update);
-    }
-  }
-
-  requestAnimationFrame(update);
+      const date = new Date(data.last_visit);
+      lastVisitEl.textContent = Number.isNaN(date.getTime())
+        ? '--'
+        : date.toLocaleString();
+    })
+    .catch(() => {
+      visitsEl.textContent = '--';
+      lastVisitEl.textContent = '--';
+    });
 }
 
 initVisitTracker();
