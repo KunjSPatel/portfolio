@@ -1,4 +1,4 @@
-# Kunj Patel � Portfolio
+# Kunj Patel Portfolio
 
 A minimal, terminal-inspired portfolio site.
 
@@ -20,5 +20,3 @@ A minimal, terminal-inspired portfolio site.
    (or `https://<username>.github.io/` if the repo is named `<username>.github.io`).
 
 No build step is required � this is a static HTML/CSS/JS site.
-
-![Visitor Count](https://profile-counter.glitch.me/[YOUR-GITHUB-USERNAME]/count.svg)
