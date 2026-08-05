@@ -172,12 +172,25 @@
       </div>
       <div class="tracker-stats">
         <div class="stat-item">
-          <span class="stat-label">visits</span>
-          <span class="stat-value" id="visits">--</span>
+          <span class="stat-label">total visits</span>
+          <span class="stat-value" id="total-visits">--</span>
         </div>
         <div class="stat-item">
           <span class="stat-label">last_visit</span>
           <span class="stat-value" id="last-visit">--</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">likes</span>
+          <button class="like-button" id="like-button" type="button" aria-label="Like this portfolio">
+            <span class="like-icon" aria-hidden="true">&#10084;</span>
+            <span class="like-count" id="likes-count">--</span>
+          </button>
+        </div>
+      </div>
+      <div class="country-stats">
+        <span class="stat-label">visitors by country</span>
+        <div class="country-list" id="country-list">
+          <span class="country-empty">--</span>
         </div>
       </div>
     </div>
