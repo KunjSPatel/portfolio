@@ -566,6 +566,85 @@ a { color: inherit; text-decoration: none; }
 .cert-item a { color: var(--green); text-decoration: underline; }
 
 /* Contact */
+.contact-form {
+  margin-top: 1.75rem;
+  padding: 1.4rem;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.form-label {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  background: #0b1714;
+  color: var(--text);
+  font: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--green-dim);
+  box-shadow: 0 0 0 3px rgba(61, 220, 132, 0.12);
+}
+
+.form-input.has-error {
+  border-color: #e07a7a;
+  box-shadow: 0 0 0 3px rgba(224, 122, 122, 0.12);
+}
+
+.form-textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.form-error {
+  min-height: 1.1rem;
+  color: #f2a3a3;
+  font-size: 0.78rem;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-status {
+  color: var(--text-dim);
+  font-size: 0.84rem;
+}
+
 .contact-links {
   display: flex;
   gap: 1rem;
@@ -623,7 +702,7 @@ a { color: inherit; text-decoration: none; }
 
 .tracker-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.75rem 1.25rem;
   align-items: end;
 }
@@ -746,7 +825,7 @@ a { color: inherit; text-decoration: none; }
   }
 
   .tracker-stats .stat-item:last-child {
-    grid-column: span 2;
+    grid-column: auto;
   }
 
   .country-pill {
@@ -766,6 +845,7 @@ a { color: inherit; text-decoration: none; }
   .nav-toggle { display: flex; }
   .name { font-size: 1.9rem; }
   .section-title { font-size: 1.6rem; }
+  .form-grid { grid-template-columns: 1fr; }
 
   .nav.open .nav-links {
     display: flex;

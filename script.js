@@ -5,13 +5,19 @@ if (yearEl) {
 
 const VISITS_WORKER_URL = 'https://portfolio-counter.mysoulrises.workers.dev';
 const LIKES_WORKER_URL = `${VISITS_WORKER_URL}/like`;
+const CONTACT_WORKER_URL = `${VISITS_WORKER_URL}/contact`;
 const LIKED_STORAGE_KEY = 'portfolio_liked';
 
 const likesButtonEl = document.getElementById('like-button');
 const likesCountEl = document.getElementById('likes-count');
 const likeIconEl = document.querySelector('#like-button .like-icon');
+const messagesSentEl = document.getElementById('messages-sent');
+const contactFormEl = document.getElementById('contact-form');
+const contactSubmitEl = document.getElementById('contact-submit');
+const contactStatusEl = document.getElementById('contact-status');
 
 let currentLikes = null;
+let currentMessagesSent = null;
 let isLikedByUser = false;
 
 const COUNTRY_NAME_TO_CODE = {
@@ -112,6 +118,136 @@ function setLikesCount(value) {
 
   currentLikes = likes;
   likesCountEl.textContent = String(likes);
+}
+
+function setMessagesSentCount(value) {
+  const messagesSent = parseNumber(value);
+
+  if (!messagesSentEl) {
+    return;
+  }
+
+  if (messagesSent === null) {
+    messagesSentEl.textContent = '--';
+    return;
+  }
+
+  currentMessagesSent = messagesSent;
+  messagesSentEl.textContent = String(messagesSent);
+}
+
+function setFieldError(fieldName, message) {
+  const errorEl = document.getElementById(`${fieldName}-error`);
+  const inputEl = document.getElementById(`contact-${fieldName}`);
+
+  if (errorEl) {
+    errorEl.textContent = message;
+  }
+
+  if (inputEl) {
+    inputEl.classList.toggle('has-error', Boolean(message));
+  }
+}
+
+function clearContactErrors() {
+  setFieldError('name', '');
+  setFieldError('email', '');
+  setFieldError('message', '');
+}
+
+function validateContactForm(formData) {
+  const errors = {};
+  const name = formData.name.trim();
+  const email = formData.email.trim();
+  const message = formData.message.trim();
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (name.length < 2) {
+    errors.name = 'Please enter a real name, or at least a convincing alias.';
+  }
+
+  if (!emailPattern.test(email)) {
+    errors.email = 'That email does not look deployable yet.';
+  }
+
+  if (message.length < 10) {
+    errors.message = 'Message is a little short. Give me at least one useful sentence.';
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+    payload: {
+      name,
+      email,
+      message
+    }
+  };
+}
+
+async function initContactForm() {
+  if (!contactFormEl || !contactSubmitEl || !contactStatusEl) {
+    return;
+  }
+
+  contactFormEl.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    clearContactErrors();
+    contactStatusEl.textContent = '';
+
+    const formData = {
+      name: contactFormEl.name.value,
+      email: contactFormEl.email.value,
+      message: contactFormEl.message.value
+    };
+
+    const validation = validateContactForm(formData);
+
+    if (!validation.isValid) {
+      Object.entries(validation.errors).forEach(([field, message]) => {
+        setFieldError(field, message);
+      });
+
+      contactStatusEl.textContent = 'Form blocked by QA. Fix the highlighted fields and retry.';
+      return;
+    }
+
+    contactSubmitEl.disabled = true;
+    contactStatusEl.textContent = 'Sending message. No carrier pigeons involved.';
+
+    try {
+      const response = await fetch(CONTACT_WORKER_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...validation.payload,
+          source: 'portfolio-contact-form',
+          submitted_at: new Date().toISOString()
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Contact API failed: ${response.status}`);
+      }
+
+      const data = await response.json().catch(() => ({}));
+      const serverMessagesSent = parseNumber(data.messages_sent ?? data.contact_count);
+
+      contactFormEl.reset();
+      if (serverMessagesSent !== null) {
+        setMessagesSentCount(serverMessagesSent);
+      } else if (currentMessagesSent !== null) {
+        setMessagesSentCount(currentMessagesSent + 1);
+      }
+      contactStatusEl.textContent = 'Message sent. If it was a bug report, I already respect you more.';
+    } catch {
+      contactStatusEl.textContent = 'Message did not send. The form is innocent; the network is under investigation.';
+    } finally {
+      contactSubmitEl.disabled = false;
+    }
+  });
 }
 
 function readStoredLikeState() {
@@ -323,6 +459,7 @@ function initVisitTracker() {
       visitsEl.textContent = String(data.visits ?? '--');
 
       setLikesCount(data.likes ?? data.total_likes);
+      setMessagesSentCount(data.messages_sent ?? data.contact_count);
       renderCountryStats(data.visitors_by_country ?? data.countries ?? data.country_visits);
 
       const date = new Date(data.last_visit);
@@ -334,12 +471,14 @@ function initVisitTracker() {
       visitsEl.textContent = '--';
       lastVisitEl.textContent = '--';
       setLikesCount('--');
+      setMessagesSentCount('--');
       renderCountryStats(null);
     });
 }
 
 initLikeButton();
 initVisitTracker();
+initContactForm();
 
 const navToggle = document.getElementById('navToggle');
 const nav = document.querySelector('.nav');

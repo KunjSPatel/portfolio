@@ -153,8 +153,58 @@
     <h2 class="section-title">Let's connect.</h2>
     <p class="section-text">
       Open to conversations about quality assurance, AI testing, and enterprise software.
-      Reach out on LinkedIn or check out my work on GitHub.
+      Reach out on LinkedIn, check out my work on GitHub, or send a note below.
+      I read messages faster than flaky regression suites, which is saying something.
     </p>
+    <form class="contact-form" id="contact-form" novalidate>
+      <div class="form-grid">
+        <label class="form-field">
+          <span class="form-label">Name</span>
+          <input
+            class="form-input"
+            id="contact-name"
+            name="name"
+            type="text"
+            placeholder="Your name, alias, or bug bounty title"
+            autocomplete="name"
+            required
+          />
+          <span class="form-error" id="name-error" aria-live="polite"></span>
+        </label>
+
+        <label class="form-field">
+          <span class="form-label">Email</span>
+          <input
+            class="form-input"
+            id="contact-email"
+            name="email"
+            type="email"
+            placeholder="you@company.com"
+            autocomplete="email"
+            required
+          />
+          <span class="form-error" id="email-error" aria-live="polite"></span>
+        </label>
+      </div>
+
+      <label class="form-field">
+        <span class="form-label">Message</span>
+        <textarea
+          class="form-input form-textarea"
+          id="contact-message"
+          name="message"
+          rows="5"
+          placeholder="Tell me what you're building, breaking, or bravely shipping on a Friday."
+          required
+        ></textarea>
+        <span class="form-error" id="message-error" aria-live="polite"></span>
+      </label>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" id="contact-submit" type="submit">Send message -&gt;</button>
+        <span class="form-status" id="contact-status" aria-live="polite"></span>
+      </div>
+    </form>
     <div class="contact-links">
       <a class="btn btn-primary" href="https://www.linkedin.com/in/kunjpatel05/" target="_blank" rel="noopener">LinkedIn -&gt;</a>
       <a class="btn btn-outline" href="https://github.com/KunjSPatel" target="_blank" rel="noopener">GitHub -&gt;</a>
@@ -172,12 +222,16 @@
       </div>
       <div class="tracker-stats">
         <div class="stat-item">
-          <span class="stat-label">total visits</span>
+          <span class="stat-label">total_visits</span>
           <span class="stat-value" id="total-visits">--</span>
         </div>
         <div class="stat-item">
           <span class="stat-label">last_visit</span>
           <span class="stat-value" id="last-visit">--</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">messages_sent</span>
+          <span class="stat-value" id="messages-sent">--</span>
         </div>
         <div class="stat-item">
           <span class="stat-label">likes</span>

@@ -1,14 +1,14 @@
-# Kunj Patel — Portfolio
+# Kunj Patel ï¿½ Portfolio
 
 A minimal, terminal-inspired portfolio site.
 
 ## Structure
 
-- `index.html` — page markup
-- `style.css` — styles
-- `script.js` — small interactions (mobile nav, footer year)
-- `public/profile.jpg` — profile photo
-- `public/Kunj-Resume.pdf` — downloadable résumé
+- `index.html` ï¿½ page markup
+- `style.css` ï¿½ styles
+- `script.js` ï¿½ small interactions (mobile nav, footer year)
+- `public/profile.jpg` ï¿½ profile photo
+- `public/Kunj-Resume.pdf` ï¿½ downloadable rï¿½sumï¿½
 
 ## Deploying to GitHub Pages
 
@@ -19,6 +19,6 @@ A minimal, terminal-inspired portfolio site.
 5. Your site will be published at `https://<username>.github.io/<repo>/`
    (or `https://<username>.github.io/` if the repo is named `<username>.github.io`).
 
-No build step is required — this is a static HTML/CSS/JS site.
+No build step is required ï¿½ this is a static HTML/CSS/JS site.
 
 ![Visitor Count](https://profile-counter.glitch.me/[YOUR-GITHUB-USERNAME]/count.svg)
